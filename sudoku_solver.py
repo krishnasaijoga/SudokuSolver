@@ -80,7 +80,7 @@ def fill_num(board, num):
 def solve_sudoku(board):
     #   fill all 1's in board
     for num in range(1, 10):
-        fill_num(board, num)  # TODO: From num = 2 it is entering infinite loop
+        fill_num(board, num)
     pass
 
 
