@@ -1,5 +1,5 @@
 def read_board():
-    f = open('sample.txt', 'r')
+    f = open("sample.txt", 'r')
     x = f.readline()
     f.close()
     print(x)
