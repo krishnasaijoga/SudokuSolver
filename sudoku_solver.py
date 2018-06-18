@@ -1,4 +1,8 @@
 def read_board():
+    f = open('sample.txt', 'r')
+    x = f.readline()
+    f.close()
+    print(x)
     board = []
     for row in range(9):
         board.append([0] * 9)
