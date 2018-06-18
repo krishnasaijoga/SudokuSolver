@@ -1,0 +1,81 @@
+from aetypes import end
+
+
+def read_board():
+    board = []
+    for row in range(9):
+        board.append([0] * 9)
+    return board
+
+
+def is_safe(board, row, col, num):
+    if board[row].count(num) > 0:  # if num is present anywhere in the row
+        return False
+    for x in range(9):  # if num is present anywhere in the column
+        if board[x][col] == num:
+            return False
+    return True
+    pass
+
+
+def find_free_loc(board, row, col):
+    if board[row][col + 1:].count(0) > 0:
+        if col != -1:
+            return col+board[row][col + 1:].index(0) + 1
+        else:
+            return board[row][col + 1:].index(0)
+    else:
+        #   recurse back to previous stored num
+        return 9
+    pass
+
+
+def fill_num(board, num):
+    col = -1
+    row = 0
+    while 0 <= row < 9:
+        if board[row].count(num) == 0:  # if num is not present in row
+            col = find_free_loc(board, row, col)  # finding first free location in row from col index
+            while col < 9:
+                if col == 9:  # if no free location break
+                    break
+                if is_safe(board, row, col, num):  # check if location is safe
+                    board[row][col] = num  # if safe place num in safe location and make col = 0
+                    col = -1
+                    break
+                else:  # if location not safe find another
+                    col = find_free_loc(board, row, col)
+            if col == 9:
+                row = row - 1
+                if board[row].count(num) > 0:
+                    col = board[row].index(num)
+                    board[row][col] = 0
+        row = row + 1
+    pass
+
+
+def solve_sudoku(board):
+    #   fill all 1's in board
+    for num in range(1, 10):
+        fill_num(board, num)    # TODO: From num = 2 it is entering infinite loop
+    pass
+
+
+def print_board(board):
+    for row in range(9):
+        print(board[row])
+    pass
+
+
+def sudoku_solver():
+    #   read board from file
+    board = read_board()
+    #   solve sudoku
+    solve_sudoku(board)
+    #   print board
+    print_board(board)
+    pass
+
+
+if __name__ == '__main__':
+    sudoku_solver()
