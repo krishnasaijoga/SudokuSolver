@@ -11,6 +11,13 @@ def is_safe(board, row, col, num):
     for x in range(9):  # if num is present anywhere in the column
         if board[x][col] == num:
             return False
+    # check for block safety
+    block_row = (row / 3) * 3
+    block_col = (col / 3) * 3
+    for row_iter in range(block_row, block_row + 3):
+        for col_iter in range(block_col, block_col + 3):
+            if board[row_iter][col_iter] == num:
+                return False
     return True
     pass
 
@@ -18,7 +25,7 @@ def is_safe(board, row, col, num):
 def find_free_loc(board, row, col):
     if board[row][col + 1:].count(0) > 0:
         if col != -1:
-            return col+board[row][col + 1:].index(0) + 1
+            return col + board[row][col + 1:].index(0) + 1
         else:
             return board[row][col + 1:].index(0)
     else:
@@ -47,6 +54,7 @@ def fill_num(board, num):
                 if board[row].count(num) > 0:
                     col = board[row].index(num)
                     board[row][col] = 0
+                    row = row - 1
         row = row + 1
     pass
 
@@ -54,7 +62,7 @@ def fill_num(board, num):
 def solve_sudoku(board):
     #   fill all 1's in board
     for num in range(1, 10):
-        fill_num(board, num)    # TODO: From num = 2 it is entering infinite loop
+        fill_num(board, num)  # TODO: From num = 2 it is entering infinite loop
     pass
 
 
