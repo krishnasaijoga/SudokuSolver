@@ -1,6 +1,3 @@
-from aetypes import end
-
-
 def read_board():
     board = []
     for row in range(9):
