@@ -1,11 +1,25 @@
+import os
+import sys
+
+
 def read_board():
-    f = open("sample.txt", 'r')
-    x = f.readline()
-    f.close()
-    print(x)
     board = []
-    for row in range(9):
-        board.append([0] * 9)
+    # print(sys.argv[0])    contains current working file pathname
+    file_name = os.path.join(os.path.dirname(sys.argv[0]),'sample.txt')
+    f = open(file_name, 'r')
+    for x in f:
+        temp = x.split()
+        temp2 = []
+        for each in temp:
+            temp2.append(int(each))
+            # if int(each) != 0:
+            #     temp2.append([int(each), 1])    # permanent shouldn't be changed
+            # else:
+            #     temp2.append([int(each), 0])    # empty blocks, editable
+        board.append(temp2)
+    f.close()
+    print_board(board)
+    print()
     return board
 
 
