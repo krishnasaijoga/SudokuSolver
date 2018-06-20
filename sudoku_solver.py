@@ -86,14 +86,20 @@ def fill_num(board, num):
     pass
 
 
+prev_num = 0
+
+
 def fill_board(board, nums):
+    global prev_num
     if nums.__len__() == 0:
         return True
     num = random.choice(nums)
     if fill_num(board, num):
         nums.pop(nums.index(num))
+        prev_num = num
         fill_board(board, nums)
     else:
+        nums.append(prev_num)
         fill_board(board, nums)
     pass
 
