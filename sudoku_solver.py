@@ -1,11 +1,12 @@
 import os
+import random
 import sys
 
 
 def read_board():
     board = []
     # print(sys.argv[0])    contains current working file pathname
-    file_name = os.path.join(os.path.dirname(sys.argv[0]),'sample.txt')
+    file_name = os.path.join(os.path.dirname(sys.argv[0]), 'sample.txt')
     f = open(file_name, 'r')
     for x in f:
         temp = x.split()
@@ -74,13 +75,40 @@ def fill_num(board, num):
                     board[row][col] = 0
                     row = row - 1
         row = row + 1
+    if row == 9:
+        return True
+    return False
+    pass
+
+
+def fill_board(board, nums):
+    if nums.__len__() == 0:
+        return True
+    num = random.choice(nums)
+    if fill_num(board, num):
+        nums.pop(nums.index(num))
+        fill_board(board, nums)
+    else:
+        fill_board(board, nums)
     pass
 
 
 def solve_sudoku(board):
     #   fill all 1's in board
-    for num in range(1, 10):
-        fill_num(board, num)
+    nums = list(range(1, 10))
+
+    fill_board(board, nums)
+
+    # while nums.__len__() > 0:
+    #     num = random.choice(nums)
+    #     nums.pop(nums.index(num))
+    #     fill_num(board, num)
+
+    # while num < 10:
+    #     if fill_num(board, num):
+    #         num = num + 1
+    #     else:
+    #         num = num - 1
     pass
 
 
