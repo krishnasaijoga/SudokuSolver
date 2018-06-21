@@ -1,3 +1,4 @@
+import copy
 import os
 import sys
 
@@ -16,7 +17,7 @@ def print_board(board):
 def read_board():
     board = []
     # print(sys.argv[0])    contains current working file pathname
-    file_name = os.path.join(os.path.dirname(sys.argv[0]), 'sample.txt')
+    file_name = os.path.join(os.path.dirname(sys.argv[0]), 'sample2.txt')
     f = open(file_name, 'r')
     for x in f:
         temp = x.split()
@@ -28,6 +29,21 @@ def read_board():
     print_board(board)
     print('')
     return board
+
+
+def is_complete(board):
+    for row in board:
+        for col in row:
+            if col == 0:
+                return False
+    return True
+
+
+def find_empty_loc(board):
+    for row_idx, row in enumerate(board):
+        for col_idx, col in enumerate(row):
+            if col == 0:
+                return row_idx, col_idx
 
 
 def find_possibilities(board, i, j):
@@ -43,44 +59,67 @@ def find_possibilities(board, i, j):
             numbers = numbers - {board[x][y]}
     if numbers.__len__() == 0:
         return False
-    return numbers
-    pass
-
-
-def count_of_values_in_board(board):
-    count = 0
-    for row in board:
-        for col in row:
-            if col != 0:
-                count = count + 1
-    return count
+    return list(numbers)
 
 
 def fill_obvious(board):
-    count = count_of_values_in_board(board)
-    for i in range(0, 9):
-        for j in range(0, 9):
-            if board[i][j] == 0:
-                possibilities = find_possibilities(board, i, j)
-                if not possibilities:
-                    return
-                if possibilities.__len__() == 1:
-                    board[i][j] = possibilities.pop()
-                    count = count + 1
-    if count != 81:
+    while True:
+        board_changed = False
+        for i in range(0, 9):
+            for j in range(0, 9):
+                if board[i][j] == 0:
+                    possibilities = find_possibilities(board, i, j)
+                    if possibilities.__len__() == 0:
+                        raise RuntimeError("No Moves left")
+                    if possibilities.__len__() == 1:
+                        board[i][j] = possibilities[0]
+                        board_changed = True
+        if not board_changed:
+            return
+
+
+def solve_sudoku(board):
+    try:
         fill_obvious(board)
+    except:
+        return False
+
+    print("After Filling obvious")
+    print(" ")
+    print_board(board)
+    print(" ")
+
+    if is_complete(board):
+        return True
+
+    # i, j = 0, 0
+
+    i, j = find_empty_loc(board)
+    # for row_idx, row in enumerate(board):
+    #     for col_idx, col in enumerate(row):
+    #         if col == 0:
+    #             i, j = row_idx, col_idx
+    #             break
+    possibilities = find_possibilities(board, i, j)
+
+    if type(possibilities).__name__ == 'list':
+        for value in possibilities:
+            snapshot = copy.deepcopy(board)
+            board[i][j] = value
+            result = solve_sudoku(board)
+            if result:
+                return True
+            else:
+                board = copy.deepcopy(snapshot)
+    return False
 
 
 def sud_solve():
     board = read_board()
-
-    try:
-        fill_obvious(board)
-    except RuntimeError as re:
-        print("This board can't be solved")
-
+    solve_sudoku(board)
+    print("Board Filled Completely")
+    print(" ")
     print_board(board)
-    pass
 
 
 if __name__ == '__main__':
