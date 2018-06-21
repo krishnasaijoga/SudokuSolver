@@ -68,11 +68,12 @@ def fill_obvious(board):
         for i in range(0, 9):
             for j in range(0, 9):
                 possibilities = find_possibilities(board, i, j)
-                if possibilities.__len__() == 0:
-                    raise RuntimeError("No Moves left")
-                if possibilities.__len__() == 1:
-                    board[i][j] = possibilities[0]
-                    board_changed = True
+                if possibilities:
+                    if possibilities.__len__() == 0:
+                        raise RuntimeError("No Moves left")
+                    if possibilities.__len__() == 1:
+                        board[i][j] = possibilities[0]
+                        board_changed = True
         if not board_changed:
             return
 
@@ -80,34 +81,26 @@ def fill_obvious(board):
 def solve_sudoku(board):
     try:
         fill_obvious(board)
-    except:
+    except RuntimeError:
         return False
 
-    print("After Filling obvious")
-    print(" ")
-    print(is_complete(board))
-    print_board(board)
-    print(" ")
+    # print("After Filling obvious")
+    # print(" ")
+    # print(is_complete(board))
+    # print_board(board)
+    # print(" ")
 
     if is_complete(board):
         return True
 
-    # i, j = 0, 0
+    i, j = find_empty_loc(board)  # returns first free location
 
-    i, j = find_empty_loc(board)
-    # for row_idx, row in enumerate(board):
-    #     for col_idx, col in enumerate(row):
-    #         if col == 0:
-    #             i, j = row_idx, col_idx
-    #             break
     possibilities = find_possibilities(board, i, j)
-
-    if type(possibilities).__name__ == 'list':
+    if possibilities:
         for value in possibilities:
             snapshot = copy.deepcopy(board)
             board[i][j] = value
-            result = solve_sudoku(board)
-            if result:
+            if solve_sudoku(board):
                 return True
             else:
                 board = copy.deepcopy(snapshot)
