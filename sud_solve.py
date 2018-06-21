@@ -47,6 +47,8 @@ def find_empty_loc(board):
 
 
 def find_possibilities(board, i, j):
+    if board[i][j] != 0:
+        return False
     numbers = {x for x in range(1, 10)}
     for x in board[i]:
         numbers = numbers - {x}
@@ -57,8 +59,6 @@ def find_possibilities(board, i, j):
     for x in range(row_i, row_i + 3):
         for y in range(col_j, col_j + 3):
             numbers = numbers - {board[x][y]}
-    if numbers.__len__() == 0:
-        return False
     return list(numbers)
 
 
@@ -67,13 +67,12 @@ def fill_obvious(board):
         board_changed = False
         for i in range(0, 9):
             for j in range(0, 9):
-                if board[i][j] == 0:
-                    possibilities = find_possibilities(board, i, j)
-                    if possibilities.__len__() == 0:
-                        raise RuntimeError("No Moves left")
-                    if possibilities.__len__() == 1:
-                        board[i][j] = possibilities[0]
-                        board_changed = True
+                possibilities = find_possibilities(board, i, j)
+                if possibilities.__len__() == 0:
+                    raise RuntimeError("No Moves left")
+                if possibilities.__len__() == 1:
+                    board[i][j] = possibilities[0]
+                    board_changed = True
         if not board_changed:
             return
 
@@ -86,6 +85,7 @@ def solve_sudoku(board):
 
     print("After Filling obvious")
     print(" ")
+    print(is_complete(board))
     print_board(board)
     print(" ")
 
