@@ -104,10 +104,34 @@ def fill_board(board, nums):
     pass
 
 
+def find_possibilities(board, row_idx, col_idx):
+    numbers = {x for x in range(1, 10)}
+    for x in board[row_idx]:
+        numbers = numbers - {x[0]}
+    for x in range(0, 9):
+        numbers = numbers - set(board[x][col_idx])
+    return numbers
+
+
+def fill_obvious(board):
+    possibilities = []
+    for row_idx, row in enumerate(board):
+        for col_idx, col in enumerate(row):
+            if col[0] == 0:
+                possibilities = find_possibilities(board, row_idx, col_idx)
+            if possibilities.__len__() == 1:
+                board[row_idx][col_idx] = [possibilities.pop(), 0]
+    pass
+
+
 def solve_sudoku(board):
     #   fill all 1's in board
     nums = list(range(1, 10))
 
+    fill_obvious(board)
+    print("after filling obvious")
+    print("")
+    print_board(board)
     fill_board(board, nums)
 
     # while nums.__len__() > 0:
