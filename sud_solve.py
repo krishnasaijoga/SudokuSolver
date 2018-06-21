@@ -91,6 +91,11 @@ def solve_sudoku(board):
     # print(" ")
 
     if is_complete(board):
+        # print("After Filling obvious")
+        print(" ")
+        print(is_complete(board))
+        print_board(board)
+        print(" ")
         return True
 
     i, j = find_empty_loc(board)  # returns first free location
@@ -110,9 +115,9 @@ def solve_sudoku(board):
 def sud_solve():
     board = read_board()
     solve_sudoku(board)
-    print("Board Filled Completely")
-    print(" ")
-    print_board(board)
+    # print("Board Filled Completely")
+    # print(" ")
+    # print_board(board)
 
 
 if __name__ == '__main__':
